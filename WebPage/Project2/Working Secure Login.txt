@@ -1,0 +1,122 @@
+<?php
+
+ini_set('display_errors',1);
+error_reporting(E_ALL);
+require_once('dbconnection.php');
+
+if (isset($_REQUEST['MyUsername']))
+{
+    $MyUsername = $pwd = '';
+    $result = "";
+    $MyUsername = stripslashes($_REQUEST['MyUsername']);
+    $MyUsername = mysqli_real_escape_string($conn,$MyUsername);
+    $pwd = stripslashes($_REQUEST['MyPassword']);
+    $pwd = mysqli_real_escape_string($conn,$pwd);
+    
+    
+    
+    //$pwd = !empty($_POST['MyPassword'])?$_POST['MyPassword']:'-';
+   
+
+    $sql = "SELECT * FROM users WHERE username='$MyUsername'";
+    //$sql2 = "SELECT * FROM users WHERE Password = '$pwd'";
+    //$hash = ["Password"];
+    ///$sql ="SELECT username, Password FROM 'users' WHERE username = '$myusername' AND Password = '$mypassword'";
+    $result = mysqli_query($conn,$sql);
+    //$result2 = mysqli_query($conn,$sql2);
+   
+  if(mysqli_num_rows($result) > 0)
+  {
+     while ($row = mysqli_fetch_array($result))
+    {
+
+        if (password_verify($pwd, $row["Password"]))
+        {
+          ob_start();
+          session_start();
+            $_SESSION['username']=$MyUsername;
+             header("location: https://mayar.abertay.ac.uk/~1900829/Project2/Profile.php");
+        }
+   
+  
+    }
+    
+  }
+  else
+  {
+    header("location: https://mayar.abertay.ac.uk/~1900829/Project2/Login.php");
+
+  }
+
+
+
+}
+  else
+  {
+  
+  
+   
+?>
+
+
+
+
+<?php
+
+ini_set('display_errors',1);
+error_reporting(E_ALL);
+require_once('dbconnection.php');
+
+if (isset($_REQUEST['MyUsername']))
+{
+    
+    $MyUsername = stripslashes($_REQUEST['MyUsername']);
+    $MyUsername = mysqli_real_escape_string($conn,$MyUsername);
+    $pwd = stripslashes($_REQUEST['MyPassword']);
+    $pwd = mysqli_real_escape_string($conn,$pwd);
+    
+
+    
+  
+    $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE username='?'");
+    mysqli_stmt_bind_param($stmt, 'ss', $MyUsername);
+    mysqli_stmt_bind_result($MyUsername);
+    mysqli_stmt_execute($stmt);
+    
+    $result = mysqli_stmt_get_result($stmt);
+
+  
+   
+  if(mysqli_num_rows($result) > 0)
+  {
+     while (mysqli_stmt_fetch($result))
+    {
+
+        if (password_verify($pwd, mysqli_stmt_fetch($result)["Password"]))
+        {
+          ob_start();
+          session_start();
+            $_SESSION['username']=$MyUsername;
+             header("location: https://mayar.abertay.ac.uk/~1900829/Project2/Profile.php");
+        }
+   
+  
+    }
+    
+  }
+  else
+  {
+    header("location: https://mayar.abertay.ac.uk/~1900829/Project2/Login.php");
+
+  }
+  mysqli_stmt_close($stmt);
+  mysqli_close($conn);
+
+
+}
+  else
+  {
+  
+  
+   
+?>

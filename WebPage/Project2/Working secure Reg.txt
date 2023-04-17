@@ -1,0 +1,33 @@
+<?php
+ini_set('display_errors',1);
+error_reporting(E_ALL);
+require_once('dbconnection.php');
+if (isset($_REQUEST['username'])){
+$username = $email = $password = $pwd = '';
+$result = "";
+$username = !empty($_POST['username'])?$_POST['username']:'-';
+$email = !empty($_POST['email'])?$_POST['email']:'-';
+$pwd = !empty($_POST['Password'])?$_POST['Password']:'-';
+$hash = password_hash($pwd, PASSWORD_DEFAULT);
+$password = $hash;
+//$username = $_POST['username'];
+//$email = $_POST['email'];
+//$pwd = $_POST['Password'];
+
+
+$sql = "INSERT INTO users (username, email, Password) VALUES ('$username','$email', '$password')";
+        
+$result = mysqli_query($conn,$sql);
+
+      
+if($result){
+  //echo "<div class='form'>
+//<h3>You are registered successfully.</h3>
+//<br/>Click here to <a href='login.php'>Login</a></div>";
+header('Location: https://mayar.abertay.ac.uk/~1900829/Project2/RegSuccess.html');
+
+}
+
+}else{
+
+?>
